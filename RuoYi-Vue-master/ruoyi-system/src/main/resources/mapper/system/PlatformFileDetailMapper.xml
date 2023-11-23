@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.PlatformFileDetailMapper">
+
+    <resultMap type="PlatformFileDetail" id="PlatformFileDetailResult">
+        <result property="id"    column="id"    />
+        <result property="fileName"    column="file_name"    />
+        <result property="fileType"    column="file_type"    />
+        <result property="fileDesc"    column="file_desc"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="fileUrl"    column="file_url"    />
+        <result property="fileSize"    column="file_size"    />
+        <result property="uploaderId"    column="uploader_id"    />
+        <result property="uploaderName"    column="uploader_name"    />
+        <result property="parentFileId"    column="parent_file_id"    />
+    </resultMap>
+
+    <sql id="selectPlatformFileDetailVo">
+        select id, file_name, file_type, file_desc, create_time, file_url, file_size, uploader_id, uploader_name, parent_file_id from platform_file_detail
+    </sql>
+
+    <select id="selectPlatformFileDetailList" parameterType="PlatformFileDetail" resultMap="PlatformFileDetailResult">
+        <include refid="selectPlatformFileDetailVo"/>
+        <where>
+            <if test="fileName != null  and fileName != ''"> and file_name like concat('%', #{fileName}, '%')</if>
+            <if test="fileType != null  and fileType != ''"> and file_type = #{fileType}</if>
+            <if test="fileDesc != null  and fileDesc != ''"> and file_desc = #{fileDesc}</if>
+            <if test="fileUrl != null  and fileUrl != ''"> and file_url = #{fileUrl}</if>
+            <if test="fileSize != null "> and file_size = #{fileSize}</if>
+            <if test="uploaderId != null "> and uploader_id = #{uploaderId}</if>
+            <if test="uploaderName != null  and uploaderName != ''"> and uploader_name like concat('%', #{uploaderName}, '%')</if>
+            <if test="parentFileId != null "> and parent_file_id = #{parentFileId}</if>
+        </where>
+    </select>
+
+    <select id="selectPlatformFileDetailById" parameterType="Long" resultMap="PlatformFileDetailResult">
+        <include refid="selectPlatformFileDetailVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertPlatformFileDetail" parameterType="PlatformFileDetail" useGeneratedKeys="true" keyProperty="id">
+        insert into platform_file_detail
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="fileName != null and fileName != ''">file_name,</if>
+            <if test="fileType != null and fileType != ''">file_type,</if>
+            <if test="fileDesc != null and fileDesc != ''">file_desc,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="fileUrl != null and fileUrl != ''">file_url,</if>
+            <if test="fileSize != null">file_size,</if>
+            <if test="uploaderId != null">uploader_id,</if>
+            <if test="uploaderName != null and uploaderName != ''">uploader_name,</if>
+            <if test="parentFileId != null">parent_file_id,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="fileName != null and fileName != ''">#{fileName},</if>
+            <if test="fileType != null and fileType != ''">#{fileType},</if>
+            <if test="fileDesc != null and fileDesc != ''">#{fileDesc},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="fileUrl != null and fileUrl != ''">#{fileUrl},</if>
+            <if test="fileSize != null">#{fileSize},</if>
+            <if test="uploaderId != null">#{uploaderId},</if>
+            <if test="uploaderName != null and uploaderName != ''">#{uploaderName},</if>
+            <if test="parentFileId != null">#{parentFileId},</if>
+        </trim>
+    </insert>
+
+    <update id="updatePlatformFileDetail" parameterType="PlatformFileDetail">
+        update platform_file_detail
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="fileName != null and fileName != ''">file_name = #{fileName},</if>
+            <if test="fileType != null and fileType != ''">file_type = #{fileType},</if>
+            <if test="fileDesc != null and fileDesc != ''">file_desc = #{fileDesc},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="fileUrl != null and fileUrl != ''">file_url = #{fileUrl},</if>
+            <if test="fileSize != null">file_size = #{fileSize},</if>
+            <if test="uploaderId != null">uploader_id = #{uploaderId},</if>
+            <if test="uploaderName != null and uploaderName != ''">uploader_name = #{uploaderName},</if>
+            <if test="parentFileId != null">parent_file_id = #{parentFileId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deletePlatformFileDetailById" parameterType="Long">
+        delete from platform_file_detail where id = #{id}
+    </delete>
+
+    <delete id="deletePlatformFileDetailByIds" parameterType="String">
+        delete from platform_file_detail where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

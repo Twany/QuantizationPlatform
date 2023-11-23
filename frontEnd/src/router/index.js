@@ -31,6 +31,17 @@ import Layout from '@/layout'
 // 公共路由
 export const constantRoutes = [
   {
+    path: '/fileType',
+    component: () => import('@/views/fileManage/fileType'),
+    hidden: false,
+    children: [
+      {
+        path: '/redirect/:path(.*)',
+        component: () => import('@/views/redirect')
+      }
+    ]
+  },
+  {
     path: '/redirect',
     component: Layout,
     hidden: true,
