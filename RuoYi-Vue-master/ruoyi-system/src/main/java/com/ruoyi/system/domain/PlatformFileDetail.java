@@ -50,6 +50,17 @@ public class PlatformFileDetail extends BaseEntity
     @Excel(name = "${comment}", readConverterExp = "$column.readConverterExp()")
     private Long parentFileId;
 
+    private Long fileTypeId;
+
+    public Long getFileTypeId() {
+		return fileTypeId;
+	}
+
+    public void setFileTypeId(Long fileTypeId) {
+		this.fileTypeId = fileTypeId;
+	}
+
+
     public void setId(Long id)
     {
         this.id = id;
@@ -134,17 +145,17 @@ public class PlatformFileDetail extends BaseEntity
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-                .append("id", getId())
-                .append("fileName", getFileName())
-                .append("fileType", getFileType())
-                .append("fileDesc", getFileDesc())
-                .append("createTime", getCreateTime())
-                .append("fileUrl", getFileUrl())
-                .append("fileSize", getFileSize())
-                .append("uploaderId", getUploaderId())
-                .append("uploaderName", getUploaderName())
-                .append("parentFileId", getParentFileId())
-                .toString();
+        return "PlatformFileDetail{" +
+                "id=" + id +
+                ", fileName='" + fileName + '\'' +
+                ", fileType='" + fileType + '\'' +
+                ", fileDesc='" + fileDesc + '\'' +
+                ", fileUrl='" + fileUrl + '\'' +
+                ", fileSize=" + fileSize +
+                ", uploaderId=" + uploaderId +
+                ", uploaderName='" + uploaderName + '\'' +
+                ", parentFileId=" + parentFileId +
+                ", fileTypeId=" + fileTypeId +
+                '}';
     }
 }

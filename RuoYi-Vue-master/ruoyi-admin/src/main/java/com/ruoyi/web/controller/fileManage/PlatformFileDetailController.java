@@ -47,6 +47,19 @@ public class PlatformFileDetailController extends BaseController
     }
 
     /**
+     * 通过文件parent id和数据源种类id获取详细信息
+     */
+    @GetMapping(value = "/{parentId}/{typeId}")
+    public TableDataInfo getInfoByIdAndTypeId(@PathVariable("parentId") Long parentId,@PathVariable("typeId") Long typeId)
+    {
+        PlatformFileDetail platformFileDetail = new PlatformFileDetail();
+        platformFileDetail.setParentFileId(Long.valueOf(parentId));
+        platformFileDetail.setFileTypeId(Long.valueOf(typeId));
+        List<PlatformFileDetail> list = platformFileDetailService.selectPlatformFileDetailList(platformFileDetail);
+        return getDataTable(list);
+    }
+
+    /**
      * 导出【请填写功能名称】列表
      */
     @Log(title = "【请填写功能名称】", businessType = BusinessType.EXPORT)
@@ -74,7 +87,16 @@ public class PlatformFileDetailController extends BaseController
     @PostMapping
     public AjaxResult add(@RequestBody PlatformFileDetail platformFileDetail)
     {
+        System.out.println(platformFileDetail.toString());
         return toAjax(platformFileDetailService.insertPlatformFileDetail(platformFileDetail));
+    }
+
+    // 下载文件
+    @GetMapping("/download/{id}")
+    public void download(@PathVariable("id") Long id, HttpServletResponse response) throws Exception
+    {
+        //PlatformFileDetail platformFileDetail = platformFileDetailService.selectPlatformFileDetailById(id);
+        //platformFileDetailService.downloadFile(platformFileDetail, response);
     }
 
     /**

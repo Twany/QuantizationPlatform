@@ -1,6 +1,7 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" label-width="68px">
+    <!-- 搜索 -->
+    <!-- <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" label-width="68px">
       <el-form-item label="登录地址" prop="ipaddr">
         <el-input v-model="queryParams.ipaddr" placeholder="请输入登录地址" clearable @keyup.enter.native="handleQuery" />
       </el-form-item>
@@ -12,7 +13,23 @@
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
       </el-form-item>
 
+    </el-form> -->
+
+    <!-- 选择类别 -->
+    <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" label-width="68px">
+      <el-form-item label="数据源" prop="dataTypeName">
+        <el-select v-model="queryParams.fileType" placeholder="请选择文件类型" @change="handleQuery">
+          <el-option v-for="item in fileTypeList" :key="item.id" :label="item.dataTypeName" :value="item.value" />
+        </el-select>
+      </el-form-item>
+
+      <el-form-item>
+        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
+      </el-form-item>
+
     </el-form>
+
+
     <el-table v-loading="loading" :data="list.slice((pageNum-1)*pageSize,pageNum*pageSize)" style="width: 100%;">
       <el-table-column label="序号" type="index" align="center" width="50">
         <template slot-scope="scope">
@@ -57,12 +74,15 @@
   import {
     list,
     forceLogout
-  } from "@/api/fileManage/fileList";
+} from "@/api/fileManage/fileList";
+import { listType} from "@/api/fileManage/fileType";
+
 
   export default {
     name: "Online",
     data() {
       return {
+        fileTypeList: [],
         // 遮罩层
         loading: true,
         lastFileParentId: 0, // 上次parentId，默认进入就是0
@@ -79,6 +99,7 @@
       };
     },
     created() {
+        this.getListType();
       this.getList();
     },
     methods: {
@@ -100,16 +121,22 @@
 
           this.loading = false;
         });
+        },
+      getListType() {
+        listType().then(response => {
+          console.log(response);
+          this.fileTypeList = response.rows;
+        });
       },
       //   双击文件，文件夹进入下一层，非文件夹进行预览
       doubleClickFile(row) {
         console.log(row);
         // 如果是文件类型，那么进入对应的文件夹，去库中查询以此id为parentId的文件
         if (row.fileType === 'folder') {
-            console.log("进入子文件夹");
+          console.log("进入子文件夹");
 
-            this.curFileParentId = row.id;            
-          
+          this.curFileParentId = row.id;
+
           this.getList();
         } else {
           // 预览文件

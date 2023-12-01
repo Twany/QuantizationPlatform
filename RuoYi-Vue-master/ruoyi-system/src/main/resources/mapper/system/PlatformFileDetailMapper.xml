@@ -11,6 +11,7 @@
         <result property="fileDesc"    column="file_desc"    />
         <result property="createTime"    column="create_time"    />
         <result property="fileUrl"    column="file_url"    />
+        <result property="fileTypeId"    column="file_type_id"    />
         <result property="fileSize"    column="file_size"    />
         <result property="uploaderId"    column="uploader_id"    />
         <result property="uploaderName"    column="uploader_name"    />
@@ -18,7 +19,7 @@
     </resultMap>
 
     <sql id="selectPlatformFileDetailVo">
-        select id, file_name, file_type, file_desc, create_time, file_url, file_size, uploader_id, uploader_name, parent_file_id from platform_file_detail
+        select id, file_name, file_type, file_desc, create_time, file_url, file_size, uploader_id,file_type_id, uploader_name, parent_file_id from platform_file_detail
     </sql>
 
     <select id="selectPlatformFileDetailList" parameterType="PlatformFileDetail" resultMap="PlatformFileDetailResult">
@@ -30,6 +31,8 @@
             <if test="fileUrl != null  and fileUrl != ''"> and file_url = #{fileUrl}</if>
             <if test="fileSize != null "> and file_size = #{fileSize}</if>
             <if test="uploaderId != null "> and uploader_id = #{uploaderId}</if>
+            <if test="fileTypeId!= null "> and file_type_id = #{fileTypeId}</if>
+
             <if test="uploaderName != null  and uploaderName != ''"> and uploader_name like concat('%', #{uploaderName}, '%')</if>
             <if test="parentFileId != null "> and parent_file_id = #{parentFileId}</if>
         </where>
@@ -50,8 +53,10 @@
             <if test="fileUrl != null and fileUrl != ''">file_url,</if>
             <if test="fileSize != null">file_size,</if>
             <if test="uploaderId != null">uploader_id,</if>
+
             <if test="uploaderName != null and uploaderName != ''">uploader_name,</if>
             <if test="parentFileId != null">parent_file_id,</if>
+            <if test="fileTypeId!= null ">file_type_id</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="fileName != null and fileName != ''">#{fileName},</if>
@@ -60,9 +65,11 @@
             <if test="createTime != null">#{createTime},</if>
             <if test="fileUrl != null and fileUrl != ''">#{fileUrl},</if>
             <if test="fileSize != null">#{fileSize},</if>
+
             <if test="uploaderId != null">#{uploaderId},</if>
             <if test="uploaderName != null and uploaderName != ''">#{uploaderName},</if>
             <if test="parentFileId != null">#{parentFileId},</if>
+            <if test="fileTypeId!= null ">#{fileTypeId}</if>
         </trim>
     </insert>
 
@@ -75,6 +82,7 @@
             <if test="createTime != null">create_time = #{createTime},</if>
             <if test="fileUrl != null and fileUrl != ''">file_url = #{fileUrl},</if>
             <if test="fileSize != null">file_size = #{fileSize},</if>
+            <if test="fileTypeId!= null ">file_type_id = #{fileTypeId},</if>
             <if test="uploaderId != null">uploader_id = #{uploaderId},</if>
             <if test="uploaderName != null and uploaderName != ''">uploader_name = #{uploaderName},</if>
             <if test="parentFileId != null">parent_file_id = #{parentFileId},</if>

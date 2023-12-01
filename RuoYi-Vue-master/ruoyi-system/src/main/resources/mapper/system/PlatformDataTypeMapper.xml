@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.PlatformDataTypeMapper">
+
+    <resultMap type="PlatformDataType" id="PlatformDataTypeResult">
+        <result property="id"    column="id"    />
+        <result property="dataTypeName"    column="data_type_name"    />
+        <result property="dataTypeDesc"    column="data_type_desc"    />
+    </resultMap>
+
+    <sql id="selectPlatformDataTypeVo">
+        select id, data_type_name, data_type_desc from platform_data_type
+    </sql>
+
+    <select id="selectPlatformDataTypeList" parameterType="PlatformDataType" resultMap="PlatformDataTypeResult">
+        <include refid="selectPlatformDataTypeVo"/>
+        <where>
+            <if test="dataTypeName != null  and dataTypeName != ''"> and data_type_name like concat('%', #{dataTypeName}, '%')</if>
+            <if test="dataTypeDesc != null  and dataTypeDesc != ''"> and data_type_desc = #{dataTypeDesc}</if>
+        </where>
+    </select>
+
+    <select id="selectPlatformDataTypeById" parameterType="Long" resultMap="PlatformDataTypeResult">
+        <include refid="selectPlatformDataTypeVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertPlatformDataType" parameterType="PlatformDataType">
+        insert into platform_data_type
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="dataTypeName != null">data_type_name,</if>
+            <if test="dataTypeDesc != null">data_type_desc,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="dataTypeName != null">#{dataTypeName},</if>
+            <if test="dataTypeDesc != null">#{dataTypeDesc},</if>
+        </trim>
+    </insert>
+
+    <update id="updatePlatformDataType" parameterType="PlatformDataType">
+        update platform_data_type
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="dataTypeName != null">data_type_name = #{dataTypeName},</if>
+            <if test="dataTypeDesc != null">data_type_desc = #{dataTypeDesc},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deletePlatformDataTypeById" parameterType="Long">
+        delete from platform_data_type where id = #{id}
+    </delete>
+
+    <delete id="deletePlatformDataTypeByIds" parameterType="String">
+        delete from platform_data_type where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
