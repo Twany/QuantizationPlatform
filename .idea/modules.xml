@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/QuantizationPlatform.iml" filepath="$PROJECT_DIR$/.idea/QuantizationPlatform.iml" />
+      <module fileurl="file://$PROJECT_DIR$/RuoYi-Vue-master/ruoyi.iml" filepath="$PROJECT_DIR$/RuoYi-Vue-master/ruoyi.iml" />
     </modules>
   </component>
 </project>

@@ -8,10 +8,13 @@
         <result property="fileId"    column="file_id"    />
         <result property="fileName"    column="file_name"    />
         <result property="filePath"    column="file_path"    />
+        <result property="fileType"    column="file_type"    />
+        <result property="fileSize"    column="file_size"    />
+        <result property="createTime"    column="create_time"    />
     </resultMap>
 
     <sql id="selectSysFileInfoVo">
-        select file_id, file_name, file_path from sys_file_info
+        select file_id, file_name, file_path, file_type, file_size, create_time from sys_file_info
     </sql>
 
     <select id="selectSysFileInfoList" parameterType="SysFileInfo" resultMap="SysFileInfoResult">
@@ -19,6 +22,8 @@
         <where>
             <if test="fileName != null  and fileName != ''"> and file_name like concat('%', #{fileName}, '%')</if>
             <if test="filePath != null  and filePath != ''"> and file_path = #{filePath}</if>
+            <if test="fileType != null  and fileType != ''"> and file_type = #{fileType}</if>
+            <if test="fileSize != null "> and file_size = #{fileSize}</if>
         </where>
     </select>
 
@@ -32,10 +37,16 @@
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="fileName != null">file_name,</if>
             <if test="filePath != null">file_path,</if>
+            <if test="fileType != null">file_type,</if>
+            <if test="fileSize != null">file_size,</if>
+            <if test="createTime != null">create_time,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="fileName != null">#{fileName},</if>
             <if test="filePath != null">#{filePath},</if>
+            <if test="fileType != null">#{fileType},</if>
+            <if test="fileSize != null">#{fileSize},</if>
+            <if test="createTime != null">#{createTime},</if>
         </trim>
     </insert>
 
@@ -44,6 +55,9 @@
         <trim prefix="SET" suffixOverrides=",">
             <if test="fileName != null">file_name = #{fileName},</if>
             <if test="filePath != null">file_path = #{filePath},</if>
+            <if test="fileType != null">file_type = #{fileType},</if>
+            <if test="fileSize != null">file_size = #{fileSize},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
         </trim>
         where file_id = #{fileId}
     </update>

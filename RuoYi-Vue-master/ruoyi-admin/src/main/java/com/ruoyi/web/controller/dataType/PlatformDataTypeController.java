@@ -1,5 +1,4 @@
-package com.ruoyi.web.controller.dataType;
-
+package com.ruoyi.system.controller;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
@@ -26,7 +25,7 @@ import com.ruoyi.common.core.page.TableDataInfo;
  * 【请填写功能名称】Controller
  *
  * @author ruoyi
- * @date 2023-11-28
+ * @date 2023-12-28
  */
 @RestController
 @RequestMapping("/dataType")
@@ -38,7 +37,7 @@ public class PlatformDataTypeController extends BaseController
     /**
      * 查询【请填写功能名称】列表
      */
-    //@PreAuthorize("@ss.hasPermi('system:type:list')")
+    @PreAuthorize("@ss.hasPermi('system:type:list')")
     @GetMapping("/list")
     public TableDataInfo list(PlatformDataType platformDataType)
     {
@@ -50,7 +49,7 @@ public class PlatformDataTypeController extends BaseController
     /**
      * 导出【请填写功能名称】列表
      */
-    //@PreAuthorize("@ss.hasPermi('system:type:export')")
+    @PreAuthorize("@ss.hasPermi('system:type:export')")
     @Log(title = "【请填写功能名称】", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     public void export(HttpServletResponse response, PlatformDataType platformDataType)
@@ -63,7 +62,7 @@ public class PlatformDataTypeController extends BaseController
     /**
      * 获取【请填写功能名称】详细信息
      */
-    //@PreAuthorize("@ss.hasPermi('system:type:query')")
+    @PreAuthorize("@ss.hasPermi('system:type:query')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id)
     {
@@ -71,18 +70,9 @@ public class PlatformDataTypeController extends BaseController
     }
 
     /**
-     * 通过文件id和获取【请填写功能名称】详细信息
-     */
-    @GetMapping(value = "/{id}/{typeId}")
-    public AjaxResult getInfoByIdAndTypeId(@PathVariable("id") Long id,@PathVariable("typeId") Long typeId)
-    {
-        return success(platformDataTypeService.selectPlatformDataTypeById(id));
-    }
-
-    /**
      * 新增【请填写功能名称】
      */
-    //@PreAuthorize("@ss.hasPermi('system:type:add')")
+    @PreAuthorize("@ss.hasPermi('system:type:add')")
     @Log(title = "【请填写功能名称】", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody PlatformDataType platformDataType)
@@ -93,7 +83,7 @@ public class PlatformDataTypeController extends BaseController
     /**
      * 修改【请填写功能名称】
      */
-    //@PreAuthorize("@ss.hasPermi('system:type:edit')")
+    @PreAuthorize("@ss.hasPermi('system:type:edit')")
     @Log(title = "【请填写功能名称】", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody PlatformDataType platformDataType)
@@ -104,7 +94,7 @@ public class PlatformDataTypeController extends BaseController
     /**
      * 删除【请填写功能名称】
      */
-    //@PreAuthorize("@ss.hasPermi('system:type:remove')")
+    @PreAuthorize("@ss.hasPermi('system:type:remove')")
     @Log(title = "【请填写功能名称】", businessType = BusinessType.DELETE)
     @GetMapping("/delete/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids)

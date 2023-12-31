@@ -78,9 +78,12 @@ Vue.use(Element, {
 
 Vue.config.productionTip = false
 
+const Base64 = require('js-base64').Base64
+
 new Vue({
   el: '#app',
   router,
   store,
-  render: h => h(App)
+  render: h => h(App),
+  Base64
 })

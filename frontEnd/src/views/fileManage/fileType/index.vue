@@ -1,6 +1,6 @@
 <template>
     <div class="app-container">
-      <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="78px">
+      <!-- <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="78px">
         <el-form-item label="类型名" prop="dataTypeName">
           <el-input
             v-model="queryParams.dataTypeName"
@@ -17,12 +17,21 @@
             @keyup.enter.native="handleQuery"
           />
         </el-form-item>
+        <el-form-item label="权限标识符" prop="dataPermission">
+          <el-input
+            v-model="queryParams.dataTypeDesc"
+            placeholder="请输入权限标识符"
+            clearable
+            @keyup.enter.native="handleQuery"
+          />
+        </el-form-item>
         <el-form-item>
           <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
           <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
         </el-form-item>
-      </el-form>
+      </el-form> -->
   
+
       <el-row :gutter="10" class="mb8">
         <el-col :span="1.5">
           <el-button
@@ -73,6 +82,7 @@
         <el-table-column type="selection" width="55" align="center" />
         <el-table-column label="数据类型名" align="center" prop="dataTypeName" />
         <el-table-column label="数据类型描述" align="center" prop="dataTypeDesc" />
+        <el-table-column label="权限标识符" align="center" prop="dataPermission" />
         <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
           <template slot-scope="scope">
             <el-button
@@ -112,6 +122,10 @@
           </el-form-item>
           <el-form-item label="数据类型描述" prop="dataTypeDesc">
             <el-input v-model="form.dataTypeDesc" placeholder="请输入数据类型描述" />
+          </el-form-item>
+        </el-form-item>
+          <el-form-item label="权限标识符" prop="dataPermission">
+            <el-input v-model="form.dataPermission" placeholder="请输入权限标识符" />
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
@@ -208,7 +222,7 @@
       handleAdd() {
         this.reset();
         this.open = true;
-        this.title = "添加【请填写功能名称】";
+        this.title = "添加";
       },
       /** 修改按钮操作 */
       handleUpdate(row) {
@@ -217,7 +231,7 @@
         getType(id).then(response => {
           this.form = response.data;
           this.open = true;
-          this.title = "修改【请填写功能名称】";
+          this.title = "修改";
         });
       },
       /** 提交按钮 */

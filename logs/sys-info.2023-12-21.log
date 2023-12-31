@@ -1,0 +1,5 @@
+18:11:58.895 [lettuce-eventExecutorLoop-1-4] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was /117.72.10.96:6379
+18:11:59.196 [lettuce-nioEventLoop-4-2] INFO  i.l.c.p.ReconnectionHandler - [lambda$null$3,174] - Reconnected to 117.72.10.96:6379
+18:12:03.780 [schedule-pool-17] INFO  sys-user - [run,55] - [127.0.0.1]内网IP[admin][Success][登录成功]
+18:44:12.178 [schedule-pool-10] INFO  sys-user - [run,55] - [127.0.0.1]内网IP[admin][Success][登录成功]
+19:14:26.524 [schedule-pool-20] INFO  sys-user - [run,55] - [127.0.0.1]内网IP[admin][Success][登录成功]

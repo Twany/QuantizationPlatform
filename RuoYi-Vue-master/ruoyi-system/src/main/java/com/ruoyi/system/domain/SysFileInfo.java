@@ -9,7 +9,7 @@ import com.ruoyi.common.core.domain.BaseEntity;
  * 文件信息对象 sys_file_info
  *
  * @author ruoyi
- * @date 2023-12-01
+ * @date 2023-12-05
  */
 public class SysFileInfo extends BaseEntity
 {
@@ -25,6 +25,14 @@ public class SysFileInfo extends BaseEntity
     /** 文件路径 */
     @Excel(name = "文件路径")
     private String filePath;
+
+    /** 文件类型 */
+    @Excel(name = "文件类型")
+    private String fileType;
+
+    /** 文件大小 */
+    @Excel(name = "文件大小")
+    private Long fileSize;
 
     public void setFileId(Long fileId)
     {
@@ -53,6 +61,24 @@ public class SysFileInfo extends BaseEntity
     {
         return filePath;
     }
+    public void setFileType(String fileType)
+    {
+        this.fileType = fileType;
+    }
+
+    public String getFileType()
+    {
+        return fileType;
+    }
+    public void setFileSize(Long fileSize)
+    {
+        this.fileSize = fileSize;
+    }
+
+    public Long getFileSize()
+    {
+        return fileSize;
+    }
 
     @Override
     public String toString() {
@@ -60,6 +86,9 @@ public class SysFileInfo extends BaseEntity
                 .append("fileId", getFileId())
                 .append("fileName", getFileName())
                 .append("filePath", getFilePath())
+                .append("fileType", getFileType())
+                .append("fileSize", getFileSize())
+                .append("createTime", getCreateTime())
                 .toString();
     }
 }

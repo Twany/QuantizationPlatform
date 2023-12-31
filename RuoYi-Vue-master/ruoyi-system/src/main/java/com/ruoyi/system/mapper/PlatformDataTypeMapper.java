@@ -7,7 +7,7 @@ import com.ruoyi.system.domain.PlatformDataType;
  * 【请填写功能名称】Mapper接口
  *
  * @author ruoyi
- * @date 2023-11-28
+ * @date 2023-12-28
  */
 public interface PlatformDataTypeMapper
 {

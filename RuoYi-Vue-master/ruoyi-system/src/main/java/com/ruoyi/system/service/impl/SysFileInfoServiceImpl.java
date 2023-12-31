@@ -1,6 +1,7 @@
 package com.ruoyi.system.service.impl;
 
 import java.util.List;
+import com.ruoyi.common.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.system.mapper.SysFileInfoMapper;
@@ -11,7 +12,7 @@ import com.ruoyi.system.service.ISysFileInfoService;
  * 文件信息Service业务层处理
  *
  * @author ruoyi
- * @date 2023-12-01
+ * @date 2023-12-05
  */
 @Service
 public class SysFileInfoServiceImpl implements ISysFileInfoService
@@ -52,6 +53,7 @@ public class SysFileInfoServiceImpl implements ISysFileInfoService
     @Override
     public int insertSysFileInfo(SysFileInfo sysFileInfo)
     {
+        sysFileInfo.setCreateTime(DateUtils.getNowDate());
         return sysFileInfoMapper.insertSysFileInfo(sysFileInfo);
     }
 

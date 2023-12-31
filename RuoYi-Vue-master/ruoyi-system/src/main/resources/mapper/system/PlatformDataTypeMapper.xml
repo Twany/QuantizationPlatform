@@ -8,10 +8,11 @@
         <result property="id"    column="id"    />
         <result property="dataTypeName"    column="data_type_name"    />
         <result property="dataTypeDesc"    column="data_type_desc"    />
+        <result property="dataPermission"    column="data_permission"    />
     </resultMap>
 
     <sql id="selectPlatformDataTypeVo">
-        select id, data_type_name, data_type_desc from platform_data_type
+        select id, data_type_name, data_type_desc, data_permission from platform_data_type
     </sql>
 
     <select id="selectPlatformDataTypeList" parameterType="PlatformDataType" resultMap="PlatformDataTypeResult">
@@ -19,6 +20,7 @@
         <where>
             <if test="dataTypeName != null  and dataTypeName != ''"> and data_type_name like concat('%', #{dataTypeName}, '%')</if>
             <if test="dataTypeDesc != null  and dataTypeDesc != ''"> and data_type_desc = #{dataTypeDesc}</if>
+            <if test="dataPermission != null  and dataPermission != ''"> and data_permission = #{dataPermission}</if>
         </where>
     </select>
 
@@ -27,17 +29,17 @@
         where id = #{id}
     </select>
 
-    <insert id="insertPlatformDataType" parameterType="PlatformDataType">
+    <insert id="insertPlatformDataType" parameterType="PlatformDataType" useGeneratedKeys="true" keyProperty="id">
         insert into platform_data_type
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="id != null">id,</if>
             <if test="dataTypeName != null">data_type_name,</if>
             <if test="dataTypeDesc != null">data_type_desc,</if>
+            <if test="dataPermission != null">data_permission,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="id != null">#{id},</if>
             <if test="dataTypeName != null">#{dataTypeName},</if>
             <if test="dataTypeDesc != null">#{dataTypeDesc},</if>
+            <if test="dataPermission != null">#{dataPermission},</if>
         </trim>
     </insert>
 
@@ -46,6 +48,7 @@
         <trim prefix="SET" suffixOverrides=",">
             <if test="dataTypeName != null">data_type_name = #{dataTypeName},</if>
             <if test="dataTypeDesc != null">data_type_desc = #{dataTypeDesc},</if>
+            <if test="dataPermission != null">data_permission = #{dataPermission},</if>
         </trim>
         where id = #{id}
     </update>

@@ -1,0 +1,2 @@
+18:11:49.322 [http-nio-8080-exec-39] ERROR c.r.f.w.s.TokenService - [getLoginUser,79] - 获取用户信息异常'Redis command timed out; nested exception is io.lettuce.core.RedisCommandTimeoutException: Command timed out after 10 second(s)'
+18:11:59.170 [http-nio-8080-exec-40] ERROR c.r.f.w.s.TokenService - [getLoginUser,79] - 获取用户信息异常'Redis command timed out; nested exception is io.lettuce.core.RedisCommandTimeoutException: Command timed out after 10 second(s)'
