@@ -37,7 +37,6 @@ public class PlatformDataTypeController extends BaseController
     /**
      * 查询【请填写功能名称】列表
      */
-    @PreAuthorize("@ss.hasPermi('system:type:list')")
     @GetMapping("/list")
     public TableDataInfo list(PlatformDataType platformDataType)
     {
@@ -49,7 +48,6 @@ public class PlatformDataTypeController extends BaseController
     /**
      * 导出【请填写功能名称】列表
      */
-    @PreAuthorize("@ss.hasPermi('system:type:export')")
     @Log(title = "【请填写功能名称】", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     public void export(HttpServletResponse response, PlatformDataType platformDataType)
@@ -62,7 +60,6 @@ public class PlatformDataTypeController extends BaseController
     /**
      * 获取【请填写功能名称】详细信息
      */
-    @PreAuthorize("@ss.hasPermi('system:type:query')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id)
     {
@@ -72,7 +69,6 @@ public class PlatformDataTypeController extends BaseController
     /**
      * 新增【请填写功能名称】
      */
-    @PreAuthorize("@ss.hasPermi('system:type:add')")
     @Log(title = "【请填写功能名称】", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody PlatformDataType platformDataType)
@@ -83,7 +79,6 @@ public class PlatformDataTypeController extends BaseController
     /**
      * 修改【请填写功能名称】
      */
-    @PreAuthorize("@ss.hasPermi('system:type:edit')")
     @Log(title = "【请填写功能名称】", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody PlatformDataType platformDataType)
@@ -94,7 +89,6 @@ public class PlatformDataTypeController extends BaseController
     /**
      * 删除【请填写功能名称】
      */
-    @PreAuthorize("@ss.hasPermi('system:type:remove')")
     @Log(title = "【请填写功能名称】", businessType = BusinessType.DELETE)
     @GetMapping("/delete/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids)

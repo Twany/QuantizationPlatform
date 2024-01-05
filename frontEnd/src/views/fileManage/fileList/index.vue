@@ -17,8 +17,7 @@
 
     <!-- 选择数据源类别 -->
     <el-select v-model="selectDataType" class="m-2" placeholder="选择数据源种类">
-      <el-option v-for="item in dataTypeList" :key="item.id" :label="item.dataTypeName" :value="item.id"
-        v-hasPermi="[item.dataPermission]" />
+      <el-option v-for="item in dataTypeList" :key="item.id" :label="item.dataTypeName" :value="item.id" />
     </el-select>
     &nbsp; &nbsp; &nbsp;
 
@@ -30,8 +29,8 @@
     <span style="margin:0 16px;color: #ccc;"> | </span>
 
     <!-- 新增文件 -->
-    <el-button type="primary" plain icon="el-icon-plus" size="" @click="handleAddFile" style="margin-right: 16px;"
-      v-hasPermi="['system:dept:add']">新增文件</el-button>
+    <el-button type="primary" plain icon="el-icon-plus" size="" @click="handleAddFile" style="margin-right: 16px;">新增文件
+    </el-button>
 
     <!-- 表单 -->
     <el-table v-loading="loading" :data="list.slice((pageNum-1)*pageSize,pageNum*pageSize)" style="width: 100%;">
@@ -67,11 +66,11 @@
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button v-if="scope.row.fileType!='folder'" size="mini" type="text" icon="el-icon-preview"
-            @click="previewFile(scope.row)" v-hasPermi="['fileManage:futures:download']">预览</el-button>
+            @click="previewFile(scope.row)">预览</el-button>
           <el-button v-if="scope.row.fileType!='folder'" size="mini" type="text" icon="el-icon-download"
-            @click="downFile(scope.row)" v-hasPermi="['fileManage:futures:download']">下载</el-button>
-          <el-button v-if="scope.$index!=0" v-hasPermi="['fileManage:futures:delete']" @click="deleteFile(scope.row)"
-            size="mini" type="text" icon="el-icon-delete">删除</el-button>
+            @click="downFile(scope.row)">下载</el-button>
+          <el-button v-if="scope.$index!=0" @click="deleteFile(scope.row)" size="mini" type="text"
+            icon="el-icon-delete">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -181,7 +180,7 @@
           //   ipaddr: undefined,
           //   userName: undefined
         },
-        // 数据源种类，期权为0
+        // 数据源种类
         fileTypeId: 0,
         // 表单参数
         form: {
@@ -195,7 +194,7 @@
 
         //   系统配置
         serverAddr: '',
-        serverkkViewAddr: ''
+        serverkkViewAddr: '',
       };
     },
     created() {
@@ -250,11 +249,14 @@
           this.loading = false;
         });
       },
+
       getListType() {
         listType().then(response => {
           console.log("数据源种类：");
 
           console.log(response);
+          // this.fileTypeId = response.rows[0].id;
+          // this.selectDataType = response.rows[0].id;
           this.dataTypeList = response.rows;
         });
       },
@@ -311,7 +313,7 @@
       previewFile(row) {
         const Base64 = require('js-base64').Base64;
 
-        var originUrl = this.serverAddr + 'npm'; //要预览文件的访问地址
+        var originUrl = this.serverAddr + '/fileInfo/common/download/resource?resource='; //要预览文件的访问地址
         var previewUrl = originUrl + row.fileUrl + '&fullfilename=file.' + row.fileType;
 
         window.open(this.serverkkViewAddr + '/onlinePreview?url=' + encodeURIComponent(previewUrl));
