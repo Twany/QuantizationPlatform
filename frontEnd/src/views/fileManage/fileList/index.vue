@@ -20,16 +20,20 @@
       <el-option v-for="item in dataTypeList" :key="item.id" :label="item.dataTypeName" :value="item.id"
         v-hasPermi="[item.dataPermission]" />
     </el-select>
-    &nbsp;  &nbsp; &nbsp;
+    &nbsp; &nbsp; &nbsp;
+
+    <!-- 查询按钮 -->
     <el-button type="primary" plain icon="el-icon-search" size="" @click="searchFileByDataType"
       style="margin-left: 16px;">查询</el-button>
 
 
-      <span style="margin:0 16px;color: #ccc;"> | </span>
+    <span style="margin:0 16px;color: #ccc;"> | </span>
+
+    <!-- 新增文件 -->
     <el-button type="primary" plain icon="el-icon-plus" size="" @click="handleAddFile" style="margin-right: 16px;"
       v-hasPermi="['system:dept:add']">新增文件</el-button>
 
-
+    <!-- 表单 -->
     <el-table v-loading="loading" :data="list.slice((pageNum-1)*pageSize,pageNum*pageSize)" style="width: 100%;">
       <el-table-column label="序号" type="index" align="center" width="50">
         <template slot-scope="scope">
@@ -74,27 +78,37 @@
 
     <!-- 上传文件弹窗 -->
     <el-dialog v-loading="uploadFileLoading" :title="title" :visible.sync="open" width="600px" append-to-body>
-      <el-form ref="form" :model="form" label-width="80px">
+      <el-form ref="form" :model="form" label-width="80px" required>
 
         <el-row>
           <el-col :span="12">
-            <el-form-item label="文件名称" prop="file_name">
+            <el-form-item label="文件类型" prop="fileType" required>
+              <el-select v-model="form.fileType" placeholder="请选择文件类型">
+                <el-option label="文件夹" value="folder" />
+                <el-option label="文件" value="file" />
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="文件名称" prop="fileName" required>
               <el-input v-model="form.fileName" placeholder="请输入文件名称" />
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="12">
-            <el-form-item label="文件描述" prop="file_desc">
-              <el-input v-model="form.fileDesc" placeholder="请输入文件描述" />
+            <el-form-item label="文件描述" prop="fileDesc" required>
+              <el-input v-model="form.fileDesc" placeholder="请输入文件描述" required />
             </el-form-item>
           </el-col>
         </el-row>
-        <el-row>
+        <el-row v-if="form.fileType=='file'">
           <el-col :span="12">
-            <el-form-item label="选择文件" prop="file_desc">
-              <el-upload action="#" v-model="uploadFileInfo" :http-request="requestUpload" :show-file-list="false"
-                :before-upload="beforeUpload">
+            <el-form-item label="选择文件" prop="uploadedFileInfo" required>
+              <el-upload action="#" v-model="form.uploadedFileInfo" :http-request="requestUpload"
+                :show-file-list="false" :before-upload="beforeUpload">
                 <el-button size="small">
                   选择
                   <i class="el-icon-upload el-icon--right"></i>
@@ -104,9 +118,9 @@
 
           </el-col>
         </el-row>
-
-
       </el-form>
+
+
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
         <el-button @click="cancel">取 消</el-button>
@@ -126,13 +140,19 @@
     delFile,
     getDownloadUrl
   } from "@/api/fileManage/fileList";
-import {
-  getType,
+  import {
+    getType,
     listType
   } from "@/api/fileManage/fileType";
   import {
     getUserProfile
   } from "@/api/system/user";
+
+  import {
+    getConfigKey,
+    listConfig
+  } from "@/api/system/config";
+
 
 
   export default {
@@ -166,27 +186,43 @@ import {
         // 表单参数
         form: {
           fileName: "",
-          fileDesc: ""
+          fileDesc: "",
+          uploadedFileInfo: {}
         },
-        // 已上传后的文件信息
-        uploadedFileInfo: {},
 
         // 要保持的全量DTO
-        platformFileDetailItem: {}
+        platformFileDetailItem: {},
+
+        //   系统配置
+        serverAddr: '',
+        serverkkViewAddr: ''
       };
     },
     created() {
       this.getListType();
       this.getList();
       this.getUser();
+      this.getConfig();
     },
-  methods: {
-    // 查询文件通过数据源
-    searchFileByDataType() {
-      // 将当前文件id置为选择的
-      this.fileTypeId = this.selectDataType;
-      this.getList();
-    },
+    methods: {
+      getConfig() {
+        getConfigKey('server.addr').then(response => {
+
+          this.serverAddr = response.msg;
+        });
+        getConfigKey('server.kkview.addr').then(response => {
+
+          this.serverkkViewAddr = response.msg;
+        });
+
+      },
+
+      // 查询文件通过数据源
+      searchFileByDataType() {
+        // 将当前文件id置为选择的
+        this.fileTypeId = this.selectDataType;
+        this.getList();
+      },
       /** 新增按钮操作 */
       handleAddFile(row) {
         // this.reset();
@@ -200,7 +236,7 @@ import {
       getList() {
         this.loading = true;
 
-        list(this.curFileParentId, this.selectDataType).then(response => {
+        list(this.curFileParentId, this.fileTypeId).then(response => {
           this.list = response.rows;
           this.list.unshift({
             id: this.lastFileParentId,
@@ -273,13 +309,14 @@ import {
       },
       // 预览文件
       previewFile(row) {
-        console.log(row);
         const Base64 = require('js-base64').Base64;
 
-        var originUrl = 'http://localhost/dev-api/resources/' + row.fileUrl; //要预览文件的访问地址
-        window.open('http://127.0.0.1:8012/onlinePreview?url=' + originUrl);
+        var originUrl = this.serverAddr + 'npm'; //要预览文件的访问地址
+        var previewUrl = originUrl + row.fileUrl + '&fullfilename=file.' + row.fileType;
+
+        window.open(this.serverkkViewAddr + '/onlinePreview?url=' + encodeURIComponent(previewUrl));
+
       },
-      // http://localhost/dev-api/resources/20231220_18/158f2bf86a95498d94c0401974e3b003.png
 
       /* 下载文件的公共方法，参数就传blob文件流*/
       handleExport(data) {
@@ -314,54 +351,51 @@ import {
         formData.append('file', item.file);
         formData.append('fileName', this.form.fileName);
 
-        this.uploadFileLoading = true;
 
         addFile(formData).then(response => {
-          this.uploadedFileInfo = response;
+          // this.uploadedFileInfo = response;
+
+          this.form.uploadedFileInfo = response;
+          this.form.uploadedFileInfo.name = formData.fileName;
           this.uploadFileLoading = false;
+
+          this.$modal.msgSuccess("上传成功");
         });
       },
       /** 保存提交按钮 */
       submitForm: function () {
-        this.platformFileDetailItem.fileId = this.uploadedFileInfo.id;
-        this.platformFileDetailItem.fileName = this.form.fileName;
-        this.platformFileDetailItem.fileDesc = this.form.fileDesc;
-        this.platformFileDetailItem.fileType = this.uploadedFileInfo.fileType;
-        this.platformFileDetailItem.fileUrl = this.uploadedFileInfo.filePath;
-        this.platformFileDetailItem.fileSize = this.uploadedFileInfo.fileSize;
-        this.platformFileDetailItem.uploaderName = this.userInfo.nickName;
-        this.platformFileDetailItem.uploaderId = this.userInfo.userId;
-        this.platformFileDetailItem.parentFileId = this.curFileParentId;
-        this.platformFileDetailItem.fileTypeId = this.fileTypeId;
+
+        this.$refs["form"].validate(valid => {
+          if (valid) {
+            this.platformFileDetailItem.fileId = this.form.uploadedFileInfo.id;
+            this.platformFileDetailItem.fileName = this.form.fileName;
+            this.platformFileDetailItem.fileDesc = this.form.fileDesc;
+            if (this.form.fileType == 'folder') {
+              this.platformFileDetailItem.fileType = 'folder';
+              this.platformFileDetailItem.fileUrl = '0';
+              this.platformFileDetailItem.fileSize = '0';
+            } else {
+              this.platformFileDetailItem.fileType = this.form.uploadedFileInfo.fileType;
+              this.platformFileDetailItem.fileUrl = this.form.uploadedFileInfo.filePath;
+              this.platformFileDetailItem.fileSize = this.form.uploadedFileInfo.fileSize;
+            }
 
 
-        addPlatformFileDetail(this.platformFileDetailItem).then(response => {
-          console.log(response);
-          this.$modal.msgSuccess("新增成功");
-          this.open = false;
-          this.form = {}
-          this.getList();
+            this.platformFileDetailItem.uploaderName = this.userInfo.nickName;
+            this.platformFileDetailItem.uploaderId = this.userInfo.userId;
+            this.platformFileDetailItem.parentFileId = this.curFileParentId;
+            this.platformFileDetailItem.fileTypeId = this.fileTypeId;
+
+
+            addPlatformFileDetail(this.platformFileDetailItem).then(response => {
+              console.log(response);
+              this.$modal.msgSuccess("新增成功");
+              this.open = false;
+              this.form = {}
+              this.getList();
+            });
+          }
         });
-
-
-
-        // this.$refs["form"].validate(valid => {
-        //   if (valid) {
-        //     if (this.form.deptId != undefined) {
-        //       updateDept(this.form).then(response => {
-        //         this.$modal.msgSuccess("修改成功");
-        //         this.open = false;
-        //         this.getList();
-        //       });
-        //     } else {
-        //       addDept(this.form).then(response => {
-        //         this.$modal.msgSuccess("新增成功");
-        //         this.open = false;
-        //         this.getList();
-        //       });
-        //     }
-        //   }
-        // });
 
       },
       // 删除文件

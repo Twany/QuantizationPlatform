@@ -11,7 +11,7 @@ export function list(parentId, fileTypeId) {
 // 上传文件
 export function addFile(data) {
   return request({
-    url: '/fileInfo/addFile',
+    url: '/fileInfo/addFile2',
     method: 'post',
     data: data
   })

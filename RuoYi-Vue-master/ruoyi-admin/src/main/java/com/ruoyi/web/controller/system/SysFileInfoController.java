@@ -86,6 +86,24 @@ public class SysFileInfoController extends BaseController
         return fileInfo;
     }
 
+//    使用系统路径
+    @PostMapping("/addFile2")
+    public SysFileInfo addSave2(@RequestParam("file") MultipartFile file, @RequestParam("fileName") String fileName, SysFileInfo fileInfo) throws IOException, IOException {
+        // 上传文件路径
+        String filePath = RuoYiConfig.getUploadPath();
+        // 上传并返回新文件名称
+        String newFileName = FileUploadUtils.upload(filePath, file);
+
+        // 获取文件大小
+        long size = file.getSize();
+        fileInfo.setFileName(fileName);
+        fileInfo.setFilePath(newFileName);
+        fileInfo.setFileSize(size);
+        fileInfo.setFileType(FileUploadUtils.getExtension(file));
+        sysFileInfoService.insertSysFileInfo(fileInfo);
+        return fileInfo;
+    }
+
     public static String generateRandomFileName() {
         String uuid = UUID.randomUUID().toString();
         return uuid.replaceAll("-", "");
@@ -98,14 +116,26 @@ public class SysFileInfoController extends BaseController
     public void resourceDownload(String resource, HttpServletRequest request, HttpServletResponse response)
             throws Exception
     {
-        // 获取resources文件夹的路径
-        Resource localResource = resourceLoader.getResource("classpath:resources/");
-        File staticFolder = localResource.getFile();
-
-        // 将文件保存到新创建的文件夹下
-        String absFilePath = staticFolder.getAbsolutePath()+ "/" + resource;
-        System.out.println("文件下载地址：" + absFilePath);
-        FileUtils.writeBytes(absFilePath, response.getOutputStream());
+        // 本地资源路径
+        String localPath = RuoYiConfig.getUploadPath();
+        // 数据库资源地址
+        String downloadPath = localPath + StringUtils.substringAfter(resource,"/profile/upload");
+        // 下载名称
+        String downloadName = StringUtils.substringAfterLast(downloadPath, "/");
+        System.out.println("下载名称" + downloadPath + "---" + downloadName);
+        response.setCharacterEncoding("utf-8");
+        response.setContentType("multipart/form-data");
+        response.setHeader("Content-Disposition",
+                "attachment;fileName=" + FileUtils.setFileDownloadHeader(request, downloadName));
+        FileUtils.writeBytes(downloadPath, response.getOutputStream());
+//        // 获取resources文件夹的路径
+//        Resource localResource = resourceLoader.getResource("classpath:resources/");
+//        File staticFolder = localResource.getFile();
+//
+//        // 将文件保存到新创建的文件夹下
+//        String absFilePath = staticFolder.getAbsolutePath()+ "/" + resource;
+//        System.out.println("文件下载地址：" + absFilePath);
+//        FileUtils.writeBytes(absFilePath, response.getOutputStream());
     }
 
     /**
@@ -120,7 +150,6 @@ public class SysFileInfoController extends BaseController
          String downloadPath = localPath + StringUtils.substringAfter(resource, "/profile/upload");
          return success(downloadPath);
      }
-
 
 
     /**
