@@ -106,8 +106,8 @@
         <el-row v-if="form.fileType=='file'">
           <el-col :span="12">
             <el-form-item label="选择文件" prop="uploadedFileInfo" required>
-              <el-upload action="#" v-model="form.uploadedFileInfo" :http-request="requestUpload"
-                :show-file-list="false" :before-upload="beforeUpload">
+              <el-upload action="#" v-model="form.uploadedFileInfo" required :http-request="requestUpload"
+                :show-file-list="true" :limit="1" :before-upload="beforeUpload">
                 <el-button size="small">
                   选择
                   <i class="el-icon-upload el-icon--right"></i>
@@ -158,6 +158,7 @@
     name: "Online",
     data() {
       return {
+        allowedSubmitFlag: false,
         dataTypeList: [], //数据源种类
         selectDataType: 0, //选择的数据源
         uploadFileInfo: {},
@@ -198,6 +199,7 @@
       };
     },
     created() {
+      this.form = {};
       this.getListType();
       this.getList();
       this.getUser();
@@ -367,6 +369,10 @@
 
 
         addFile(formData).then(response => {
+          console.log("上传文件：");
+          console.log(response);
+
+
           // this.uploadedFileInfo = response;
 
           this.form.uploadedFileInfo = response;
@@ -378,6 +384,18 @@
       },
       /** 保存提交按钮 */
       submitForm: function () {
+        console.log(this.form.uploadedFileInfo);
+
+        if (this.form.fileType != 'folder') {
+          if (this.form.uploadedFileInfo == undefined || this.form.uploadedFileInfo.filePath == null) {
+            this.$message({
+              message: '请先上传文件',
+              type: 'warning'
+            });
+            return;
+          }
+        }
+
 
         this.$refs["form"].validate(valid => {
           if (valid) {
@@ -404,6 +422,7 @@
             addPlatformFileDetail(this.platformFileDetailItem).then(response => {
               console.log(response);
               this.$modal.msgSuccess("新增成功");
+
               this.open = false;
               this.form = {}
               this.getList();
@@ -417,10 +436,11 @@
 
         this.$modal.confirm('是否确认删除？').then(function () {
           delFile(row.id).then(response => {
-            this.getList();
+            
           });
         }).then(() => {
           this.$modal.msgSuccess("删除成功");
+          this.getList();
         }).catch(() => {});
 
 
@@ -435,6 +455,7 @@
       // 取消按钮
       cancel() {
         this.open = false;
+        this.form = {}
       },
       /** 搜索按钮操作 */
       handleQuery() {
