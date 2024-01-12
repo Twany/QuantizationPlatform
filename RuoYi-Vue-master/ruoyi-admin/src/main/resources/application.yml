@@ -62,7 +62,7 @@ spring:
   servlet:
     multipart:
       # 单个文件大小
-      max-file-size: 100MB
+      max-file-size: 200MB
       # 设置总上传的文件大小
       max-request-size: 200MB
   # 服务模块
@@ -99,9 +99,9 @@ token:
   # 令牌自定义标识
   header: Authorization
   # 令牌密钥
-  secret: abcdefghijklmnopqrstuvwxyz
+  secret: vkNLGJlunlsnlannasnln
   # 令牌有效期（默认30分钟）
-  expireTime: 30
+  expireTime: 1000
 
 # MyBatis配置
 mybatis:

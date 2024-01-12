@@ -59,7 +59,7 @@
       <el-table-column label="描述" align="center" prop="fileDesc" :show-overflow-tooltip="true" />
       <el-table-column label="上传人" align="center" prop="uploaderName" :show-overflow-tooltip="true" />
       <el-table-column label="上传时间" align="center" prop="editTime" width="180">
-        <template slot-scope="scope" v-if="scope.row.fileType!='folder'">
+        <template slot-scope="scope" v-if="scope.$index!=0">
           <span>{{ parseTime(scope.row.createTime).slice(0,10) }}</span>
         </template>
       </el-table-column>
@@ -69,8 +69,8 @@
             @click="previewFile(scope.row)">预览</el-button>
           <el-button v-if="scope.row.fileType!='folder'" size="mini" type="text" icon="el-icon-download"
             @click="downFile(scope.row)">下载</el-button>
-          <el-button v-if="scope.$index!=0" @click="deleteFile(scope.row)" size="mini" type="text"
-            icon="el-icon-delete">删除</el-button>
+          <el-button v-if="scope.$index!=0 && scope.row.uploaderId==userInfo.userId" @click="deleteFile(scope.row)"
+            size="mini" type="text" icon="el-icon-delete">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -237,13 +237,25 @@
 
         list(this.curFileParentId, this.fileTypeId).then(response => {
           this.list = response.rows;
+          console.log(this.list);
+
           this.list.unshift({
             id: this.lastFileParentId,
             fileName: '../',
             fileType: 'folder',
             fileDesc: '',
             createTime: '',
-            parentFileId: this.lastFileParentId
+            createBy: null,
+            createTime: "2024-01-01 10:00:00",
+            fileSize: 0,
+            fileTypeId: 0,
+            fileUrl: "",
+            parentFileId: this.lastFileParentId,
+            remark: null,
+            updateBy: null,
+            updateTime: "2024-01-01 10:00:00",
+            uploaderId: 0,
+            uploaderName: ""
           });
 
           this.loading = false;
@@ -369,7 +381,7 @@
 
         this.$refs["form"].validate(valid => {
           if (valid) {
-            this.platformFileDetailItem.fileId = this.form.uploadedFileInfo.id;
+            // this.platformFileDetailItem.fileId = this.form.uploadedFileInfo.id;
             this.platformFileDetailItem.fileName = this.form.fileName;
             this.platformFileDetailItem.fileDesc = this.form.fileDesc;
             if (this.form.fileType == 'folder') {
@@ -416,6 +428,8 @@
       getUser() {
         getUserProfile().then(response => {
           this.userInfo = response.data;
+          console.log(this.userInfo);
+
         });
       },
       // 取消按钮
