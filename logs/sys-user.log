@@ -32,3 +32,9 @@
 11:38:34.883 [schedule-pool-39] INFO  sys-user - [run,55] - [127.0.0.1]内网IP[yanyikuo][Logout][退出成功]
 11:38:41.428 [schedule-pool-20] INFO  sys-user - [run,55] - [127.0.0.1]内网IP[yanyikuo][Success][登录成功]
 12:07:29.140 [SpringApplicationShutdownHook] INFO  sys-user - [shutdownAsyncManager,31] - ====关闭后台任务任务线程池====
+15:43:52.836 [Thread-5] INFO  sys-user - [shutdownAsyncManager,31] - ====关闭后台任务任务线程池====
+15:44:05.995 [Thread-8] INFO  sys-user - [shutdownAsyncManager,31] - ====关闭后台任务任务线程池====
+16:18:25.282 [schedule-pool-1] INFO  sys-user - [run,55] - [127.0.0.1]内网IP[gushaokui][Logout][退出成功]
+16:35:28.272 [schedule-pool-3] INFO  sys-user - [run,55] - [127.0.0.1]内网IP[admin][Error][密码输入错误1次]
+16:35:28.297 [schedule-pool-1] INFO  sys-user - [run,55] - [127.0.0.1]内网IP[admin][Error][用户不存在/密码错误]
+16:35:32.202 [schedule-pool-2] INFO  sys-user - [run,55] - [127.0.0.1]内网IP[gushaokui][Success][登录成功]
